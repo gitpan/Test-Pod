@@ -6,11 +6,12 @@ use Test::Manifest qw(get_t_files);
 WriteMakefile
         (
         'NAME'      => 'Test::Pod',
-        'VERSION'   => '0.6',
+        'VERSION'   => '0.61',
  		'PREREQ_PM' => {
- 			'Test::Builder' => undef,
- 			'Test::More'  => undef,
- 			'Pod::Checker'  => undef,
+ 			'Test::Manifest' => undef,
+ 			'Test::Builder'  => undef,
+ 			'Test::More'     => undef,
+ 			'Pod::Checker'   => undef,
  			},
         'PM'        => 
         	{
