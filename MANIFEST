@@ -1,0 +1,11 @@
+MANIFEST
+Makefile.PL
+lib/Pod.pm
+t/check_pod.t
+t/load.t
+t/pod_ok.t
+t/pod/bad.pod
+t/pod/good.pod
+t/pod/no_pod.pod
+t/pod/warning.pod
+t/test_manifest

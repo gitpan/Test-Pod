@@ -1,0 +1,3 @@
+load.t
+check_pod.t
+pod_ok.t

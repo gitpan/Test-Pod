@@ -1,0 +1,21 @@
+# $Id: bad.pod,v 1.1 2002/08/19 05:46:18 comdog Exp $
+
+=head1 NAME
+
+Test::Pod test pod -- a valid pod file
+
+=head1 DESCRIPTION
+
+=over 
+
+This is a pod file with an unmatched =over.
+
+=head1 AUTHOR
+
+brian d foy, E<lt>bdfoy@cpan.orgE<gt>
+
+=head1 COPYRIGHT
+
+Copyright 2002, brian d foy
+
+=cut
