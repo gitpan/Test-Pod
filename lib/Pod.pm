@@ -1,16 +1,7 @@
-#$Id: Pod.pm,v 1.10 2003/10/12 03:58:10 petdance Exp $
-
-=head1 TODO
-
-STUFF TO DO
-
-Note the changes that are being made.
-Note that you no longer can test for "no pod".
-
-=cut
-
+#$Id: Pod.pm,v 1.13 2003/11/10 06:07:02 petdance Exp $
 
 package Test::Pod;
+
 use strict;
 
 =head1 NAME
@@ -36,15 +27,16 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw( $VERSION );
-$VERSION = '0.96';
+$VERSION = '1.00';
 
 use Exporter;
 use vars qw( @EXPORT @EXPORT_OK );
-@EXPORT = qw( &pod_ok &pod_file_ok );
+@EXPORT = qw( &pod_ok &pod_file_ok &all_pod_files_ok );
 @EXPORT_OK = @EXPORT;
 
 use Pod::Simple;
 use Test::Builder;
+use File::Find;
 
 my $Test = Test::Builder->new;
 
@@ -60,6 +52,7 @@ sub import {
     no strict 'refs';
     *{$caller.'::pod_ok'}       = \&pod_ok;
     *{$caller.'::pod_file_ok'}  = \&pod_file_ok;
+    *{$caller.'::all_pod_files_ok'}  = \&all_pod_files_ok;
 
     *{$caller.'::POD_OK'}       = \&OK;
     *{$caller.'::NO_FILE'}      = \&NO_FILE;
@@ -110,9 +103,72 @@ sub pod_file_ok {
     }
 } # pod_file_ok
 
+=head2 all_pod_files_ok( [@files] )
+
+Checks all the files in C<@files> for valid POD.  It runs
+L<all_pod_files()> on each file, and calls the C<plan()> function for you
+(one test for each function), so you can't have already called C<plan>.
+
+If C<@files> is empty or not passed, the function finds all POD files in
+the F<blib> directory.  A POD file is one that ends with F<.pod>, F<.pl>
+and F<.pm>, or any file where the first line looks like a shebang line.
+
+If you're testing a module, just make a F<t/pod.t>:
+
+    use Test::More;
+    eval "use Test::Pod 1.00";
+    plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
+    all_pod_files_ok();
+
+=cut
+
+sub all_pod_files_ok {
+    my @files = @_ ? @_ : all_pod_files( "blib" );
+
+    $Test->plan( tests => scalar @files );
+
+    foreach my $file ( @files ) {
+	pod_file_ok( $file, $file );
+    }
+}
+
+sub all_pod_files {
+    my @files;
+
+    find( sub {
+	return unless -f $_;
+
+	my $hit = 0;
+	$hit = 1 if /\.p(l|m|od)$/;
+	if ( !$hit ) {
+	    local *FH;
+	    open FH, $_ or die "Can't check $_";
+	    my $first = <FH>;
+	    close FH;
+
+	    $hit = 1 if $first && ($first =~ /^#!.*perl/);
+	}
+
+	push( @files, $File::Find::name ) if $hit;
+    }, "blib" );
+
+    return @files;
+}
+
+sub valid_file {
+    my $file = shift;
+
+    return 0 unless -f $_;
+
+    warn "Checking $_ as $file\n";
+
+
+    return 0;
+}
+
 =head2 pod_ok( FILENAME [, EXPECTED [, NAME ]]  )
 
-Note: This function is deprecated.  Use pod_file_ok() going forward.
+Note: This function is B<deprecated>.  Use pod_file_ok() going forward.
 
 pod_ok parses the POD in filename and returns one of five
 symbolic constants starting from the top of this list:
@@ -152,16 +208,23 @@ sub pod_ok {
 This source is part of a SourceForge project which always has the
 latest sources in CVS, as well as all of the previous releases.
 
-	https://sourceforge.net/projects/brian-d-foy/
+    https://sourceforge.net/projects/brian-d-foy/
 
 If, for some reason, I disappear from the world, one of the other
 members of the project can shepherd this module appropriately.
 
+=head1 TODO
+
+STUFF TO DO
+
+Note the changes that are being made.
+Note that you no longer can test for "no pod".
+
 =head1 AUTHOR
 
-Currently maintained by Andy Lester, E<lt>test-pod@petdance.comE<gt>.
+Currently maintained by Andy Lester, C<< <test-pod@petdance.com> >>.
 
-Originally by brian d foy, E<lt>bdfoy@cpan.orgE<gt>
+Originally by brian d foy, C<< <bdfoy@cpan.org> >>.
 
 =head1 COPYRIGHT
 

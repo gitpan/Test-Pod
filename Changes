@@ -1,29 +1,33 @@
-# $Id: Changes,v 1.8 2003/10/12 03:50:46 petdance Exp $
+# $Id: Changes,v 1.11 2003/11/10 06:07:02 petdance Exp $
+
+1.00 - Mon Nov 10 00:06:30 CST 2003
+    [NEW FEATURES]
+    * Added all_pod_files_ok() method.
 
 0.96 - Sat Oct 11 22:46:00 CST 2003
-	+ Removed dependency on IO::Scalar, which was wrong.
-	+ Requires newest, most-lenient Pod::Simple.
-	+ Added various tests to the t/ hierarchy.  Thanks to 
-	  David Wheeler for help on this.
+    * Removed dependency on IO::Scalar, which was wrong.
+    * Requires newest, most-lenient Pod::Simple.
+    * Added various tests to the t/ hierarchy.  Thanks to David Wheeler
+      for help on this.
 
 0.95 - Mon Mar  3 09:35:00 CST 2002
-	+ Rewrote to use Pod::Simple instead of Pod::Checker
-	+ Deprecated the pod_ok function.
-	+ Added pod_file_ok() to replace pod_ok().
+    * Rewrote to use Pod::Simple instead of Pod::Checker
+    * Deprecated the pod_ok function.
+    * Added pod_file_ok() to replace pod_ok().
 
 0.90 - Tue Dec  3 18:59:39 CST 2002
-	+ things seem to be going well, so this is not in beta :)
-	+ cleanup up some formatting
-	+ fixed the bad pod test which some Pod::Checker versions
-		reported extra errors
-		
+    * things seem to be going well, so this is not in beta :)
+    * cleanup up some formatting
+    * fixed the bad pod test which some Pod::Checker versions reported
+      extra errors
+                
 0.72 - Thu Nov 14 20:16:13 CST 2002
-	+ cleaned up Makefile.PL and tests
-	+ no code changes
-	
+    * cleaned up Makefile.PL and tests
+    * no code changes
+        
 0.71 - Mon Sep  9 10:58:22 CDT 2002
-	+ added Test::Builder::Tester to PREREQ_PM
+    * added Test::Builder::Tester to PREREQ_PM
 
 0.70 - Thu Sep  5 22:39:13 CDT 2002
-	+ pod_ok shows POD errors and warnings if it fails
-	+ you can give the test a name
+    * pod_ok shows POD errors and warnings if it fails
+    * you can give the test a name

@@ -1,4 +1,4 @@
-# $Id: unknown-directive.t,v 1.1 2003/03/04 17:18:30 petdance Exp $
+# $Id: unknown-directive.t,v 1.2 2003/11/07 20:11:18 petdance Exp $
 use strict;
 
 use Test::Builder::Tester tests => 2;
@@ -17,5 +17,5 @@ BAD: {
     test_diag(
 	"$file (9): Unknown directive: =over4",
     );
-    test_test( '$name is bad' );
+    test_test( "$name is bad" );
 }
