@@ -8,14 +8,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.14
+Version 1.16
 
-    $Header: /home/cvs/test-pod/Pod.pm,v 1.3 2004/04/29 04:39:06 andy Exp $
+    $Header: /home/cvs/test-pod/Pod.pm,v 1.6 2004/04/30 22:46:46 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.14';
+$VERSION = '1.16';
 
 =head1 SYNOPSIS
 
@@ -198,8 +198,11 @@ sub all_pod_files {
     while ( @queue ) {
         my $file = shift @queue;
         if ( -d $file ) {
-            opendir my $dh, $file or next;
-            my @newfiles = readdir $dh;
+            local *DH;
+            opendir DH, $file or next;
+            my @newfiles = readdir DH;
+            closedir DH;
+
             @newfiles = File::Spec->no_upwards( @newfiles );
             @newfiles = grep { $_ ne "CVS" && $_ ne ".svn" } @newfiles;
 

@@ -1,4 +1,9 @@
-# $Id: Changes,v 1.25 2004/04/29 04:39:06 andy Exp $
+# $Id: Changes,v 1.28 2004/04/30 22:46:46 andy Exp $
+
+1.16 - Fri Apr 30 17:42:50 CDT 2004
+    [FIXES]
+    * Fixed a warning under 5.8.3.  Also explicitly closes dir handles
+      when searching for POD.
 
 1.14 - Wed Apr 28 23:38:29 CDT 2004
     [ENHANCEMENTS]
