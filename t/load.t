@@ -1,4 +1,4 @@
-# $Id: load.t,v 1.5 2003/02/25 03:47:52 petdance Exp $
+#!perl -T
 
 use Test::More tests=>1;
 

@@ -1,4 +1,5 @@
-# $Id: item-ordering.t,v 1.4 2003/11/07 20:11:18 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::Builder::Tester tests => 2;

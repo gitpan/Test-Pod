@@ -1,4 +1,9 @@
-# $Id: Changes,v 1.24 2004/03/13 16:39:38 andy Exp $
+# $Id: Changes,v 1.25 2004/04/29 04:39:06 andy Exp $
+
+1.14 - Wed Apr 28 23:38:29 CDT 2004
+    [ENHANCEMENTS]
+    * Now runs taint-safe.  No longer uses File::Find.  I'm trying to
+      get all my modules to run under -T correctly, so this is big.
 
 1.12 - Sat Mar 13 10:34:06 CST 2004
     [ENHANCEMENTS]

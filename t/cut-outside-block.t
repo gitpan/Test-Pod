@@ -1,4 +1,5 @@
-# $Id: cut-outside-block.t,v 1.3 2003/11/07 20:11:18 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::Builder::Tester tests => 2;

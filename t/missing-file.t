@@ -1,4 +1,5 @@
-# $Id: missing-file.t,v 1.1 2004/01/26 01:47:14 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::Builder::Tester tests => 3;

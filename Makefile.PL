@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.15 2004/03/02 02:38:41 andy Exp $
+# $Id: Makefile.PL,v 1.16 2004/04/29 04:39:06 andy Exp $
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
@@ -8,7 +8,6 @@ WriteMakefile (
         'Pod::Simple'           => '2.04',
         'Test::More'            => 0,
         'Test::Builder::Tester' => 0,
-        'File::Find'            => 0,
         'File::Spec'            => 0,
     },
     clean => { FILES => 'Test-Pod-*' },

@@ -1,5 +1,3 @@
-#$Id: Pod.pm,v 1.2 2004/03/13 16:39:38 andy Exp $
-
 package Test::Pod;
 
 use strict;
@@ -10,14 +8,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.12
+Version 1.14
 
-    $Header: /home/cvs/test-pod/Pod.pm,v 1.2 2004/03/13 16:39:38 andy Exp $
+    $Header: /home/cvs/test-pod/Pod.pm,v 1.3 2004/04/29 04:39:06 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.12';
+$VERSION = '1.14';
 
 =head1 SYNOPSIS
 
@@ -77,7 +75,7 @@ use vars qw( @EXPORT @EXPORT_OK );
 
 use Pod::Simple;
 use Test::Builder;
-use File::Find;
+use File::Spec;
 
 my $Test = Test::Builder->new;
 
@@ -186,7 +184,7 @@ sub all_pod_files_ok {
 
 Returns a list of all F<*.PL>, F<*.pl>, F<*.pm> or F<*.pod> files in
 I<$dir> and in directories below. If no directories are passed, it
-defaults to "blib".
+defaults to "blib".  Skips any files in CVS or .svn directories.
 
 The order of the files returned is machine-dependent.  If you want them
 sorted, you'll have to sort them yourself.
@@ -194,26 +192,40 @@ sorted, you'll have to sort them yourself.
 =cut
 
 sub all_pod_files {
-    my @files;
+    my @queue = @_ ? @_ : ('blib');
+    my @pod = ();
 
-    for my $dir (@_ ? @_ : ('blib')) {
-        find(
-            sub {
-                return unless -f $_;
-                my $hit = 0;
-                $hit = 1 if /\.p(l|m|od)$/ || /\.PL$/;
-                unless ( $hit ) {
-                    local *FH;
-                    open FH, $_ or die "Can't check $_";
-                    my $first = <FH>;
-                    close FH;
-                    $hit = 1 if $first && ($first =~ /^#!.*perl/);
-                }
-                push( @files, $File::Find::name ) if $hit;
-            }, $dir );
-    }
+    while ( @queue ) {
+        my $file = shift @queue;
+        if ( -d $file ) {
+            opendir my $dh, $file or next;
+            my @newfiles = readdir $dh;
+            @newfiles = File::Spec->no_upwards( @newfiles );
+            @newfiles = grep { $_ ne "CVS" && $_ ne ".svn" } @newfiles;
 
-    return @files;
+            push @queue, map "$file/$_", @newfiles;
+        }
+        if ( -f $file ) {
+            push @pod, $file if _is_perl( $file );
+        }
+    } # while
+    return @pod;
+}
+
+sub _is_perl {
+    my $file = shift;
+
+    return 1 if $file =~ /\.PL$/;
+    return 1 if $file =~ /\.p(l|m|od)$/;
+
+    local *FH;
+    open FH, $file or return;
+    my $first = <FH>;
+    close FH;
+
+    return 1 if defined $first && ($first =~ /^#!.*perl/);
+
+    return;
 }
 
 =head2 pod_ok( FILENAME [, EXPECTED [, NAME ]]  )

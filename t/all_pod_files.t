@@ -1,4 +1,5 @@
-# $Id: all_pod_files.t,v 1.8 2004/01/26 03:50:06 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::More tests => 2;
@@ -20,3 +21,5 @@ my @expected = qw(
 @files = sort @files;
 @expected = sort @expected;
 is_deeply( \@files, \@expected, "Got all the distro files" );
+use Data::Dumper;
+print Dumper( \@files, \@expected );

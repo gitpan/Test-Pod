@@ -1,4 +1,5 @@
-# $Id: unknown-directive.t,v 1.3 2004/01/26 03:50:06 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::Builder::Tester tests => 2;

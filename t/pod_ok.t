@@ -1,4 +1,5 @@
-# $Id: pod_ok.t,v 1.5 2003/03/03 15:23:41 petdance Exp $
+#!perl -T
+
 use strict;
 
 use Test::Builder::Tester tests => 1;
@@ -9,8 +10,8 @@ use constant DEPRECATED => 'NOTE: pod_ok() is deprecated';
 FOO: {
     my $name = 'test ok';
     for ( 1 .. 4 ) {
-	test_out( "ok $_ - $name" );
-	test_diag( DEPRECATED );
+        test_out( "ok $_ - $name" );
+        test_diag( DEPRECATED );
     }
     pod_ok( "t/pod/good.pod",         undef,       , $name );
     pod_ok( "t/pod/good.pod",         POD_OK       , $name );
