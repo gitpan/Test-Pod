@@ -1,5 +1,11 @@
-# $Id: Changes,v 1.4 2002/11/15 02:16:12 comdog Exp $
+# $Id: Changes,v 1.5 2002/12/04 01:07:25 comdog Exp $
 
+0.90 - Tue Dec  3 18:59:39 CST 2002
+	+ things seem to be going well, so this is not in beta :)
+	+ cleanup up some formatting
+	+ fixed the bad pod test which some Pod::Checker versions
+		reported extra errors
+		
 0.72 - Thu Nov 14 20:16:13 CST 2002
 	+ cleaned up Makefile.PL and tests
 	+ no code changes

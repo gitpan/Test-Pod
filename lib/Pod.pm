@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.6 2002/11/15 02:13:07 comdog Exp $
+#$Id: Pod.pm,v 1.7 2002/12/04 01:07:25 comdog Exp $
 package Test::Pod;
 use strict;
 
@@ -16,7 +16,7 @@ pod_ok( $file );
 
 =head1 DESCRIPTION
 
-THIS IS ALPHA SOFTWARE.
+THIS IS BETA SOFTWARE.
 
 Check POD files for errors or warnings in a test file, using Pod::Checker
 to do the heavy lifting.
@@ -24,8 +24,8 @@ to do the heavy lifting.
 =cut
 
 use 5.004;
-use vars qw($VERSION @EXPORT);
-$VERSION = '0.72';
+use vars qw( $VERSION );
+$VERSION = '0.90';
 
 use Carp qw(carp);
 use Exporter;
@@ -41,15 +41,15 @@ use constant NO_POD   => -1;
 use constant WARNINGS =>  1;
 use constant ERRORS   =>  2;
 
-my %Constants = qw( 
-	 0 POD_OK 
-	-2 NO_FILE 
-	-1 NO_POD 
-	 1 POD_WARNINGS 
+my %Constants = qw(
+	 0 POD_OK
+	-2 NO_FILE
+	-1 NO_POD
+	 1 POD_WARNINGS
 	 2 POD_ERRORS
 	);
-	
-sub import 
+
+sub import
 	{
     my $self = shift;
     my $caller = caller;
@@ -64,7 +64,7 @@ sub import
     $Test->exported_to($caller);
     $Test->plan(@_);
 	}
-	
+
 =head1 FUNCTIONS
 
 =over 4
@@ -100,11 +100,11 @@ sub pod_ok
 	my $file     = shift;
 	my $expected = shift || OK;
 	my $name     = shift || "POD test for $file";
-	
+
 	my $hash = _check_pod( $file );
-			
+
 	my $status = $hash->{result};
-	
+
 	if( defined $expected and $expected eq $status )
 		{
 		$Test->ok( 1, $name );
@@ -149,32 +149,32 @@ sub pod_ok
 sub _check_pod
 	{
 	my $file = shift;
-	
+
 	return { result => NO_FILE } unless -e $file;
 
 	my %hash    = ();
 	my $output;
 	$hash{output} = \$output;
-	
+
 	my $checker = Pod::Checker->new();
-	
+
 	# i pass it a tied filehandle because i need to fool
 	# Pod::Checker into thinking it is sending the errors
 	# somewhere so it will count them for me.
-	tie( *OUTPUT, 'IO::Scalar', $hash{output} );	
+	tie( *OUTPUT, 'IO::Scalar', $hash{output} );
 	$checker->parse_from_file( $file, \*OUTPUT);
-		
+
 	$hash{ result } = do {
 		$hash{errors}   = $checker->num_errors;
 		$hash{warnings} = $checker->can('num_warnings') ?
 			$checker->num_warnings : 0;
-		
+
 		   if( $hash{errors} == -1  ) { NO_POD   }
 		elsif( $hash{errors}   > 0  ) { ERRORS   }
 		elsif( $hash{warnings} > 0  ) { WARNINGS }
 		else                          { OK }
 		};
-	
+
 	return \%hash;
 	}
 
@@ -184,7 +184,7 @@ This source is part of a SourceForge project which always has the
 latest sources in CVS, as well as all of the previous releases.
 
 	https://sourceforge.net/projects/brian-d-foy/
-	
+
 If, for some reason, I disappear from the world, one of the other
 members of the project can shepherd this module appropriately.
 

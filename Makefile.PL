@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.9 2002/11/15 02:14:12 comdog Exp $
+# $Id: Makefile.PL,v 1.10 2002/12/04 01:05:15 comdog Exp $
 use ExtUtils::MakeMaker;
 
 sub ExtUtils::MM_Any::test_via_harness
@@ -16,7 +16,7 @@ WriteMakefile
         'VERSION_FROM'   => 'lib/Pod.pm',
  		'PREREQ_PM'      => {
  			'IO::Scalar'            => '0',
- 			'Pod::Checker'          => '1.2',
+ 			'Pod::Checker'          => '1.4',
  			'Test::Manifest'        => '0.9',
  			'Test::More'            => '0',
  			'Test::Builder::Tester' => '0',
