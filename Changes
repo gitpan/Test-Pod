@@ -1,3 +1,8 @@
+# $Id: Changes,v 1.3 2002/09/09 15:58:40 comdog Exp $
+
+0.71 - Mon Sep  9 10:58:22 CDT 2002
+	+ added Test::Builder::Tester to PREREQ_PM
+
 0.70 - Thu Sep  5 22:39:13 CDT 2002
 	+ pod_ok shows POD errors and warnings if it fails
 	+ you can give the test a name
