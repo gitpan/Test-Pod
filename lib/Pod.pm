@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.3 2002/08/29 22:09:40 comdog Exp $
+#$Id: Pod.pm,v 1.4 2002/09/04 19:53:10 comdog Exp $
 package Test::Pod;
 use strict;
 
@@ -161,8 +161,6 @@ sub _check_pod
 	return \%hash;
 	}
 	
-=item plan
-
 =cut
 
 sub plan

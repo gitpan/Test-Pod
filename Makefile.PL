@@ -1,17 +1,18 @@
-# $Id: Makefile.PL,v 1.5 2002/08/29 22:08:06 comdog Exp $
+# $Id: Makefile.PL,v 1.6 2002/09/04 19:53:46 comdog Exp $
 use ExtUtils::MakeMaker;
 
-use Test::Manifest qw(get_t_files);
+my $tests = do {
+	local @ARGV = qw(t/test_manifest);
+	my $data = join " ", map {chomp; "t/$_" } <>;
+	};
 
 WriteMakefile
         (
         'NAME'      => 'Test::Pod',
-        'VERSION'   => '0.62',
+        'VERSION'   => '0.63',
  		'PREREQ_PM' => {
  			'IO::Null'       => undef,
  			'Pod::Checker'   => undef,
- 			'Test::Manifest' => undef,
- 			'Test::Builder'  => undef,
  			'Test::More'     => undef,
  			},
         'PM'        => 
@@ -20,6 +21,6 @@ WriteMakefile
             },
  
 		depend => { Makefile => 't/test_manifest' },
-        test   => { TESTS => scalar get_t_files() },
+        test   => { TESTS => $tests },
         );
 
