@@ -1,8 +1,9 @@
-# $Id: good.t,v 1.3 2003/12/28 06:11:54 petdance Exp $
+# $Id: good.t,v 1.4 2004/01/21 06:31:06 petdance Exp $
 use strict;
 
 use Test::Builder::Tester tests => 3;
 use Test::More;
+use File::Spec;
 
 BEGIN {
     use_ok( 'Test::Pod' );

@@ -1,4 +1,12 @@
-# $Id: Changes,v 1.17 2004/01/10 14:48:55 petdance Exp $
+# $Id: Changes,v 1.18 2004/01/21 06:39:26 petdance Exp $
+
+1.08 - Wed Jan 21 00:40:07 CST 2004
+    No new features or fixes.
+    
+    [FIXES]
+    * t/all_pod_files.t failed because in my zeal to be a good
+      cross-platform guy, I used File::Spec separators on lists to
+      compare against those coming from File::Find, which uses slashes.
 
 1.06 - Sat Jan 10 08:47:55 CST 2004
     No new features or fixes.

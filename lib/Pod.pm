@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.20 2004/01/10 14:48:55 petdance Exp $
+#$Id: Pod.pm,v 1.21 2004/01/21 06:40:26 petdance Exp $
 
 package Test::Pod;
 
@@ -10,14 +10,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.06
+Version 1.08
 
-    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.20 2004/01/10 14:48:55 petdance Exp $
+    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.21 2004/01/21 06:40:26 petdance Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.06';
+$VERSION = '1.08';
 
 =head1 SYNOPSIS
 
