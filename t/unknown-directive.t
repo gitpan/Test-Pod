@@ -1,4 +1,4 @@
-# $Id: unknown-directive.t,v 1.2 2003/11/07 20:11:18 petdance Exp $
+# $Id: unknown-directive.t,v 1.3 2004/01/26 03:50:06 petdance Exp $
 use strict;
 
 use Test::Builder::Tester tests => 2;
@@ -14,8 +14,7 @@ BAD: {
     test_out( "not ok 1 - $name" );
     pod_file_ok( $file, $name );
     test_fail(-1);
-    test_diag(
-	"$file (9): Unknown directive: =over4",
-    );
+    test_diag( "$file (9): Unknown directive: =over4",);
+    test_diag( "$file (13): Unknown directive: =under",);
     test_test( "$name is bad" );
 }

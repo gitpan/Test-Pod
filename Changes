@@ -1,8 +1,16 @@
-# $Id: Changes,v 1.18 2004/01/21 06:39:26 petdance Exp $
+# $Id: Changes,v 1.23 2004/03/10 05:28:39 andy Exp $
+
+1.10 - Tue Mar  9 23:27:16 CST 2004
+    [ENHANCEMENTS]
+    * Almost all of my coverage is almost to 100%.
+
+    [FIXES]
+    * Fixed some test bugs on Win32.
+    * Message problems if the file is missing.
 
 1.08 - Wed Jan 21 00:40:07 CST 2004
     No new features or fixes.
-    
+
     [FIXES]
     * t/all_pod_files.t failed because in my zeal to be a good
       cross-platform guy, I used File::Spec separators on lists to
@@ -10,7 +18,7 @@
 
 1.06 - Sat Jan 10 08:47:55 CST 2004
     No new features or fixes.
-    
+
     [FIXES]
     * t/all_pod_files.t failed because all_pod_files() returns an
       unsorted list.  Fixed.
@@ -62,11 +70,11 @@
     * cleanup up some formatting
     * fixed the bad pod test which some Pod::Checker versions reported
       extra errors
-                
+
 0.72 - Thu Nov 14 20:16:13 CST 2002
     * cleaned up Makefile.PL and tests
     * no code changes
-        
+
 0.71 - Mon Sep  9 10:58:22 CDT 2002
     * added Test::Builder::Tester to PREREQ_PM
 

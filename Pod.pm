@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.21 2004/01/21 06:40:26 petdance Exp $
+#$Id: Pod.pm,v 1.1 2004/03/02 02:38:41 andy Exp $
 
 package Test::Pod;
 
@@ -10,14 +10,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.08
+Version 1.10
 
-    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.21 2004/01/21 06:40:26 petdance Exp $
+    $Header: /home/cvs/test-pod/Pod.pm,v 1.1 2004/03/02 02:38:41 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.08';
+$VERSION = '1.10';
 
 =head1 SYNOPSIS
 
@@ -57,7 +57,7 @@ Or even (if you're running under L<Apache::Test>):
     my @poddirs = qw( blib script );
     use File::Spec::Functions qw( catdir updir );
     all_pod_files_ok(
-	all_pod_files( map { catdir updir, $_ } @poddirs )
+        all_pod_files( map { catdir updir, $_ } @poddirs )
     );
 
 
@@ -123,12 +123,12 @@ for FILENAME".
 
 sub pod_file_ok {
     my $file = shift;
-    my $name = shift || "POD test for $file";
+    my $name = @_ ? shift : "POD test for $file";
 
     if ( !-f $file ) {
-	$Test->ok( 0, $name );
-	$Test->diag( "$name does not exist" );
-	return;
+        $Test->ok( 0, $name );
+        $Test->diag( "$file does not exist" );
+        return;
     }
 
     my $checker = Pod::Simple->new;
@@ -137,12 +137,13 @@ sub pod_file_ok {
     $checker->parse_file( $file );
 
     my $ok = !$checker->any_errata_seen;
-    unless ( $Test->ok( $ok, $name ) ) {
-	my $lines = $checker->{errata};
-	for my $line ( sort { $a<=>$b } keys %$lines ) {
-	    my $errors = $lines->{$line};
-	    $Test->diag( "$file ($line): $_" ) for @$errors;
-	}
+    $Test->ok( $ok, $name );
+    if ( !$ok ) {
+        my $lines = $checker->{errata};
+        for my $line ( sort { $a<=>$b } keys %$lines ) {
+            my $errors = $lines->{$line};
+            $Test->diag( "$file ($line): $_" ) for @$errors;
+        }
     }
 
     return $ok;
@@ -176,7 +177,7 @@ sub all_pod_files_ok {
 
     my $ok = 1;
     foreach my $file ( @files ) {
-	pod_file_ok( $file, $file ) or undef $ok;
+        pod_file_ok( $file, $file ) or undef $ok;
     }
     return $ok;
 }
@@ -221,18 +222,18 @@ Note: This function is B<deprecated>.  Use pod_file_ok() going forward.
 pod_ok parses the POD in filename and returns one of five
 symbolic constants starting from the top of this list:
 
-	NO_FILE       Could not find the file
-	NO_POD        File had no pod directives
-	POD_ERRORS    POD had errors
-	POD_WARNINGS  POD had warnings
-	POD_OK	      No errors or warnings
+        NO_FILE       Could not find the file
+        NO_POD        File had no pod directives
+        POD_ERRORS    POD had errors
+        POD_WARNINGS  POD had warnings
+        POD_OK        No errors or warnings
 
 pod_ok will okay the test if you don't specify any expected
 result and it finds no errors or warnings, or if you specify
 what you expect and it finds that condition.  For instance, if
 you can live with warnings,
 
-	pod_ok( $file, POD_WARNINGS );
+        pod_ok( $file, POD_WARNINGS );
 
 When it fails, pod_ok will show any pod checking errors.
 
@@ -252,21 +253,12 @@ sub pod_ok {
 } # pod_ok
 
 
-=head1 SOURCE AVAILABILITY
-
-This source is part of a SourceForge project which always has the
-latest sources in CVS, as well as all of the previous releases.
-
-    https://sourceforge.net/projects/brian-d-foy/
-
-If, for some reason, I disappear from the world, one of the other
-members of the project can shepherd this module appropriately.
-
 =head1 TODO
 
 STUFF TO DO
 
 Note the changes that are being made.
+
 Note that you no longer can test for "no pod".
 
 =head1 AUTHOR
@@ -277,7 +269,7 @@ Originally by brian d foy, C<< <bdfoy@cpan.org> >>.
 
 =head1 COPYRIGHT
 
-Copyright 2003, Andy Lester and brian d foy, All Rights Reserved.
+Copyright 2004, Andy Lester, All Rights Reserved.
 
 You may use, modify, and distribute this package under the
 same terms as Perl itself.

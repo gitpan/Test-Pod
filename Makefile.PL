@@ -1,23 +1,16 @@
-# $Id: Makefile.PL,v 1.14 2003/12/28 06:05:54 petdance Exp $
+# $Id: Makefile.PL,v 1.15 2004/03/02 02:38:41 andy Exp $
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
     'NAME'           => 'Test::Pod',
-    'VERSION_FROM'   => 'lib/Pod.pm',
+    'VERSION_FROM'   => 'Pod.pm',
     'PREREQ_PM'      => {
-	'Pod::Simple'           => '2.04',
+        'Pod::Simple'           => '2.04',
         'Test::More'            => 0,
         'Test::Builder::Tester' => 0,
         'File::Find'            => 0,
         'File::Spec'            => 0,
     },
-    'PM' => {
-	'lib/Pod.pm' => '$(INST_LIBDIR)/Pod.pm',
-    },
-    'MAN3PODS' => {
-	'lib/Pod.pm' => '$(INST_MAN3DIR)/Test::Pod.3',
-    },
-
     clean => { FILES => 'Test-Pod-*' },
 );
 

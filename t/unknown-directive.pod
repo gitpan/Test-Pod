@@ -1,4 +1,4 @@
-# $Id: unknown-directive.pod,v 1.1 2003/03/04 17:18:28 petdance Exp $
+# $Id: unknown-directive.pod,v 1.2 2004/01/26 03:50:06 petdance Exp $
 
 =head1 NAME
 
@@ -9,6 +9,10 @@ Test::Pod test pod -- a valid pod file
 =over4
 
 This is a pod file with an incorrect =over.
+
+=under 4
+
+This is a pod file with a bad directive.
 
 =head1 AUTHOR
 
