@@ -8,7 +8,7 @@ BEGIN {
     use_ok( "Test::Pod" );
 }
 
-my @files = Test::Pod::all_pod_files( "blib", "t/pod" );
+my @files = all_pod_files( "blib", "t/pod" );
 
 # The expected files have slashes, not File::Spec separators, because
 # that's how File::Find does it.

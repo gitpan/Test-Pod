@@ -8,14 +8,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.16
+Version 1.20
 
-    $Header: /home/cvs/test-pod/Pod.pm,v 1.6 2004/04/30 22:46:46 andy Exp $
+    $Header: /home/cvs/test-pod/Pod.pm,v 1.10 2004/06/23 05:35:27 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.16';
+$VERSION = '1.20';
 
 =head1 SYNOPSIS
 
@@ -68,11 +68,6 @@ C<Pod::Simple> to do the heavy lifting.
 
 use 5.004;
 
-use Exporter;
-use vars qw( @EXPORT @EXPORT_OK );
-@EXPORT = qw( &pod_ok &pod_file_ok &all_pod_files_ok );
-@EXPORT_OK = @EXPORT;
-
 use Pod::Simple;
 use Test::Builder;
 use File::Spec;
@@ -91,6 +86,7 @@ sub import {
     no strict 'refs';
     *{$caller.'::pod_ok'}       = \&pod_ok;
     *{$caller.'::pod_file_ok'}  = \&pod_file_ok;
+    *{$caller.'::all_pod_files'}  = \&all_pod_files;
     *{$caller.'::all_pod_files_ok'}  = \&all_pod_files_ok;
 
     *{$caller.'::POD_OK'}       = \&OK;
@@ -147,15 +143,16 @@ sub pod_file_ok {
     return $ok;
 } # pod_file_ok
 
-=head2 all_pod_files_ok( [@files] )
+=head2 all_pod_files_ok( [@files/@directories] )
 
 Checks all the files in C<@files> for valid POD.  It runs
-L<all_pod_files()> on each file, and calls the C<plan()> function for you
+L<all_pod_files()> on each file/directory, and calls the C<plan()> function for you
 (one test for each function), so you can't have already called C<plan>.
 
 If C<@files> is empty or not passed, the function finds all POD files in
-the F<blib> directory.  A POD file is one that ends with F<.pod>, F<.pl>
-and F<.pm>, or any file where the first line looks like a shebang line.
+the F<blib> directory if it exists, or the F<lib> directory if not.
+A POD file is one that ends with F<.pod>, F<.pl> and F<.pm>, or any file
+where the first line looks like a shebang line.
 
 If you're testing a module, just make a F<t/pod.t>:
 
@@ -182,9 +179,19 @@ sub all_pod_files_ok {
 
 =head2 all_pod_files( [@dirs] )
 
-Returns a list of all F<*.PL>, F<*.pl>, F<*.pm> or F<*.pod> files in
-I<$dir> and in directories below. If no directories are passed, it
-defaults to "blib".  Skips any files in CVS or .svn directories.
+Returns a list of all the Perl files in I<$dir> and in directories below.
+If no directories are passed, it defaults to F<blib> if F<blib> exists,
+or else F<lib> if not.  Skips any files in CVS or .svn directories.
+
+A Perl file is:
+
+=over 4
+
+=item * Any file that ends in F<.PL>, F<.pl>, F<.pm>, F<.pod> or F<.t>.
+
+=item * Any file that has a first line with a shebang and "perl" on it.
+
+=back
 
 The order of the files returned is machine-dependent.  If you want them
 sorted, you'll have to sort them yourself.
@@ -192,7 +199,7 @@ sorted, you'll have to sort them yourself.
 =cut
 
 sub all_pod_files {
-    my @queue = @_ ? @_ : ('blib');
+    my @queue = @_ ? @_ : _starting_points();
     my @pod = ();
 
     while ( @queue ) {
@@ -215,11 +222,17 @@ sub all_pod_files {
     return @pod;
 }
 
+sub _starting_points {
+    return 'blib' if -e 'blib';
+    return 'lib';
+}
+
 sub _is_perl {
     my $file = shift;
 
     return 1 if $file =~ /\.PL$/;
     return 1 if $file =~ /\.p(l|m|od)$/;
+    return 1 if $file =~ /\.t$/;
 
     local *FH;
     open FH, $file or return;
