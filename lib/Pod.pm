@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.19 2004/01/10 04:41:44 petdance Exp $
+#$Id: Pod.pm,v 1.20 2004/01/10 14:48:55 petdance Exp $
 
 package Test::Pod;
 
@@ -10,14 +10,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.04
+Version 1.06
 
-    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.19 2004/01/10 04:41:44 petdance Exp $
+    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.20 2004/01/10 14:48:55 petdance Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.04';
+$VERSION = '1.06';
 
 =head1 SYNOPSIS
 
@@ -185,6 +185,9 @@ sub all_pod_files_ok {
 
 Returns a list of all F<*.pl>, F<*.pm> or F<*.pod> files in I<$dir> and
 in directories below. If no directories are passed, it defaults to "blib".
+
+The order of the files returned is machine-dependent.  If you want them
+sorted, you'll have to sort them yourself.
 
 =cut
 

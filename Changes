@@ -1,4 +1,11 @@
-# $Id: Changes,v 1.16 2004/01/10 04:41:44 petdance Exp $
+# $Id: Changes,v 1.17 2004/01/10 14:48:55 petdance Exp $
+
+1.06 - Sat Jan 10 08:47:55 CST 2004
+    No new features or fixes.
+    
+    [FIXES]
+    * t/all_pod_files.t failed because all_pod_files() returns an
+      unsorted list.  Fixed.
 
 1.04 - Fri Jan  9 22:39:15 CST 2004
     [ENHANCEMENTS]
