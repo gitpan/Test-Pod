@@ -1,9 +1,8 @@
-# $Id: check_pod.t,v 1.2 2002/08/19 05:43:13 comdog Exp $
-use strict;
+# $Id: check_pod.t,v 1.3 2002/09/06 04:06:12 comdog Exp $
 
 use Test::More tests => 5;
 
-BEGIN { require Test::Pod; Test::Pod->import };
+use Test::Pod;
 
 my $hash = Test::Pod::_check_pod( "t/pod/good.pod" );
 ok( $hash->{result} eq POD_OK, "Pod file without errors" );

@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.6 2002/09/04 19:53:46 comdog Exp $
+# $Id: Makefile.PL,v 1.7 2002/09/06 04:06:12 comdog Exp $
 use ExtUtils::MakeMaker;
 
 my $tests = do {
@@ -9,11 +9,11 @@ my $tests = do {
 WriteMakefile
         (
         'NAME'      => 'Test::Pod',
-        'VERSION'   => '0.63',
+        'VERSION'   => '0.70',
  		'PREREQ_PM' => {
- 			'IO::Null'       => undef,
- 			'Pod::Checker'   => undef,
- 			'Test::More'     => undef,
+ 			'IO::Scalar'     => 0,
+ 			'Pod::Checker'   => 0,
+ 			'Test::More'     => 0,
  			},
         'PM'        => 
         	{

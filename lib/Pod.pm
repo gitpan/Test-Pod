@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.4 2002/09/04 19:53:10 comdog Exp $
+#$Id: Pod.pm,v 1.5 2002/09/06 04:06:12 comdog Exp $
 package Test::Pod;
 use strict;
 
@@ -25,11 +25,11 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw($VERSION @EXPORT);
-$VERSION = '0.62';
+$VERSION = '0.70';
 
 use Carp qw(carp);
 use Exporter;
-use IO::Null;
+use IO::Scalar;
 use Pod::Checker qw(podchecker);
 use Test::Builder;
 
@@ -69,7 +69,7 @@ sub import
 
 =over 4
 
-=item pod_ok( FILENAME, [EXPECTED] )
+=item pod_ok( FILENAME, [EXPECTED. [NAME] ] )
 
 pod_ok parses the POD in filename and returns one of five
 symbolic constants starting from the top of this list:
@@ -86,49 +86,63 @@ what you expect and it finds that condition.  For instance, if
 you can live with warnings,
 
 	pod_ok( $file, POD_WARNINGS );
-		
+
+When it fails, pod_ok will show any pod checking errors.
+
+The optional third argument NAME is the name of the test
+which pod_ok passes through to Test::Builder.  Otherwise,
+it choose a default test name "POD test for FILENAME".
+
 =cut
 
 sub pod_ok
 	{
 	my $file     = shift;
-	my $expected = shift;
-
+	my $expected = shift || OK;
+	my $name     = shift || "POD test for $file";
+	
 	my $hash = _check_pod( $file );
 			
 	my $status = $hash->{result};
 	
 	if( defined $expected and $expected eq $status )
 		{
-		$Test->ok( 1, "Expected [$expected], got [$status] for [$file]");
+		$Test->ok( 1, $name );
 		}
 	elsif( $status == NO_FILE )
 		{
-		$Test->ok( 0, "Did not find [$file]");
+		$Test->ok( 0, $name );
+		$Test->diag( "Did not find [$file]" );
 		}
 	elsif( $status == OK )
 		{
-		$Test->ok( 1, "Pod OK in [$file]" );
+		$Test->ok( 1, $name );
 		}
 	elsif( $status == ERRORS )
 		{
-		$Test->ok( 0, "Pod had errors in [$file]" );
+		$Test->ok( 0, $name );
+		$Test->diag( "Pod had errors in [$file]\n",
+			${$hash->{output}} );
 		}
 	elsif( $status == WARNINGS and $expected == ERRORS )
 		{
-		$Test->ok( 1, "Pod had warnings in [$file], but that's okay" );
+		$Test->ok( 1, $name );
 		}
 	elsif( $status == WARNINGS )
 		{
-		$Test->ok( 0, "Pod had warnings in [$file]" );
+		$Test->ok( 0, $name );
+		$Test->diag( "Pod had warnings in [$file]\n",
+			${$hash->{output}} );
 		}
 	elsif( $status == NO_POD )
 		{
-		$Test->ok( 0, "Found no pod in [$file]" );
+		$Test->ok( 0, $name );
+		$Test->diag( "Found no pod in [$file]" );
 		}
 	else
 		{
-		$Test->ok( 0, "Mysterious failure for [$file]" );
+		$Test->ok( 0, $name );
+		$Test->diag( "Mysterious failure for [$file]" );
 		}
 	}
 
@@ -138,14 +152,17 @@ sub _check_pod
 	
 	return { result => NO_FILE } unless -e $file;
 
-	my %hash     = ();
+	my %hash    = ();
+	my $output;
+	$hash{output} = \$output;
+	
 	my $checker = Pod::Checker->new();
 	
-	# i pass it a null filehandle because i need to fool
+	# i pass it a tied filehandle because i need to fool
 	# Pod::Checker into thinking it is sending the errors
 	# somewhere so it will count them for me.
-	tie( *NULL, 'IO::Null' );	
-	$checker->parse_from_file( $file, \*NULL );
+	tie( *OUTPUT, 'IO::Scalar', $hash{output} );	
+	$checker->parse_from_file( $file, \*OUTPUT);
 		
 	$hash{ result } = do {
 		$hash{errors}   = $checker->num_errors;
@@ -160,14 +177,7 @@ sub _check_pod
 	
 	return \%hash;
 	}
-	
-=cut
-
-sub plan
-	{
-	$Test->plan(@_);
-	}
-	
+		
 =head1 AUTHOR
 
 brian d foy, E<lt>bdfoy@cpan.orgE<gt>
