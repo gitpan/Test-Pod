@@ -1,5 +1,6 @@
-# $Id: load.t,v 1.2 2002/09/06 04:06:12 comdog Exp $
+# $Id: load.t,v 1.3 2002/11/15 02:12:10 comdog Exp $
 
 use Test::More tests => 1;
 
-use_ok( 'Test::Pod' );
+print "bail out! Test::Pod could not compile."
+	unless use_ok( 'Test::Pod' );

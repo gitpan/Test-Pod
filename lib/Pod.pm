@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.5 2002/09/06 04:06:12 comdog Exp $
+#$Id: Pod.pm,v 1.6 2002/11/15 02:13:07 comdog Exp $
 package Test::Pod;
 use strict;
 
@@ -25,7 +25,7 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw($VERSION @EXPORT);
-$VERSION = '0.70';
+$VERSION = '0.72';
 
 use Carp qw(carp);
 use Exporter;
@@ -177,7 +177,17 @@ sub _check_pod
 	
 	return \%hash;
 	}
-		
+
+=head1 SOURCE AVAILABILITY
+
+This source is part of a SourceForge project which always has the
+latest sources in CVS, as well as all of the previous releases.
+
+	https://sourceforge.net/projects/brian-d-foy/
+	
+If, for some reason, I disappear from the world, one of the other
+members of the project can shepherd this module appropriately.
+
 =head1 AUTHOR
 
 brian d foy, E<lt>bdfoy@cpan.orgE<gt>

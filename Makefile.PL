@@ -1,27 +1,34 @@
-# $Id: Makefile.PL,v 1.8 2002/09/06 07:19:21 comdog Exp $
+# $Id: Makefile.PL,v 1.9 2002/11/15 02:14:12 comdog Exp $
 use ExtUtils::MakeMaker;
 
-my $tests = do {
-	local @ARGV = qw(t/test_manifest);
-	my $data = join " ", map {chomp; "t/$_" } <>;
-	};
+sub ExtUtils::MM_Any::test_via_harness
+		{
+		my($self, $perl, $tests) = @_;
+
+		return qq|\t$perl "-MTest::Manifest" | .
+			qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | .
+			qq|'\$(INST_ARCHLIB)')"\n|;
+		}
 
 WriteMakefile
         (
-        'NAME'      => 'Test::Pod',
-        'VERSION'   => '0.71',
- 		'PREREQ_PM' => {
- 			'IO::Scalar'            => 0,
- 			'Pod::Checker'          => 0,
- 			'Test::More'            => 0,
- 			'Test::Builder::Tester' => 0,
+        'NAME'           => 'Test::Pod',
+        'VERSION_FROM'   => 'lib/Pod.pm',
+ 		'PREREQ_PM'      => {
+ 			'IO::Scalar'            => '0',
+ 			'Pod::Checker'          => '1.2',
+ 			'Test::Manifest'        => '0.9',
+ 			'Test::More'            => '0',
+ 			'Test::Builder::Tester' => '0',
  			},
-        'PM'        => 
+        'PM'             => 
         	{
             'lib/Pod.pm' => '$(INST_LIBDIR)/Pod.pm',
             },
- 
-		depend => { Makefile => 't/test_manifest' },
-        test   => { TESTS => $tests },
+		'MAN3PODS'		 => {
+		'lib/Pod.pm' => '$(INST_MAN3DIR)/Test::Pod.3',
+			},
+
+		clean => { FILES => 'Test-Pod-*' },
         );
 
