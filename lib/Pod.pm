@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.9 2003/03/03 15:56:05 petdance Exp $
+#$Id: Pod.pm,v 1.10 2003/10/12 03:58:10 petdance Exp $
 
 =head1 TODO
 
@@ -36,7 +36,7 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw( $VERSION );
-$VERSION = '0.95';
+$VERSION = '0.96';
 
 use Exporter;
 use vars qw( @EXPORT @EXPORT_OK );
@@ -165,7 +165,7 @@ Originally by brian d foy, E<lt>bdfoy@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright 2002, Andy Lester and brian d foy, All Rights Reserved.
+Copyright 2003, Andy Lester and brian d foy, All Rights Reserved.
 
 You may use, modify, and distribute this package under the
 same terms as Perl itself.

@@ -2,11 +2,16 @@ Changes
 MANIFEST
 Makefile.PL
 lib/Pod.pm
-t/bad.t
+t/cut-outside-block.pod
+t/cut-outside-block.t
 t/good.t
+t/item-ordering.pod
+t/item-ordering.t
 t/load.t
 t/pod_ok.t
 t/selftest.t
-t/pod/bad.pod
+t/unknown-directive.pod
+t/unknown-directive.t
 t/pod/good.pod
 t/pod/no_pod.pod
+META.yml                                 Module meta-data (added by MakeMaker)

@@ -1,12 +1,11 @@
-# $Id: Makefile.PL,v 1.11 2003/02/25 03:45:54 petdance Exp $
+# $Id: Makefile.PL,v 1.12 2003/10/12 03:50:46 petdance Exp $
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
     'NAME'           => 'Test::Pod',
     'VERSION_FROM'   => 'lib/Pod.pm',
     'PREREQ_PM'      => {
-	'IO::Scalar'            => '0',
-	'Pod::Simple'           => '0',
+	'Pod::Simple'           => '2.04',
 	'Test::More'            => '0',
 	'Test::Builder::Tester' => '0',
     },

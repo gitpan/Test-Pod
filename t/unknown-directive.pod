@@ -1,4 +1,4 @@
-# $Id: bad.pod,v 1.4 2003/03/03 20:12:54 petdance Exp $
+# $Id: unknown-directive.pod,v 1.1 2003/03/04 17:18:28 petdance Exp $
 
 =head1 NAME
 

@@ -1,4 +1,10 @@
-# $Id: Changes,v 1.6 2003/03/03 15:56:05 petdance Exp $
+# $Id: Changes,v 1.8 2003/10/12 03:50:46 petdance Exp $
+
+0.96 - Sat Oct 11 22:46:00 CST 2003
+	+ Removed dependency on IO::Scalar, which was wrong.
+	+ Requires newest, most-lenient Pod::Simple.
+	+ Added various tests to the t/ hierarchy.  Thanks to 
+	  David Wheeler for help on this.
 
 0.95 - Mon Mar  3 09:35:00 CST 2002
 	+ Rewrote to use Pod::Simple instead of Pod::Checker
