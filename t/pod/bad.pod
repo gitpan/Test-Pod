@@ -1,4 +1,4 @@
-# $Id: bad.pod,v 1.2 2002/12/04 01:03:57 comdog Exp $
+# $Id: bad.pod,v 1.4 2003/03/03 20:12:54 petdance Exp $
 
 =head1 NAME
 
@@ -6,9 +6,9 @@ Test::Pod test pod -- a valid pod file
 
 =head1 DESCRIPTION
 
-=over 4
+=over4
 
-This is a pod file with an unmatched =over.
+This is a pod file with an incorrect =over.
 
 =head1 AUTHOR
 

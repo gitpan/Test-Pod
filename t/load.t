@@ -1,12 +1,7 @@
-# $Id: load.t,v 1.4 2002/12/04 01:04:38 comdog Exp $
+# $Id: load.t,v 1.5 2003/02/25 03:47:52 petdance Exp $
 
-use Test::More tests => 1;
+use Test::More tests=>1;
 
-use Pod::Checker;
-
-my $version = Pod::Checker->VERSION;
-
-print STDERR "\nI see you are using Pod::Checker $version\n";
-
-print "bail out! Test::Pod could not compile."
-	unless use_ok( 'Test::Pod' );
+BEGIN {
+    use_ok( 'Test::Pod' );
+}

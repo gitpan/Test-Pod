@@ -1,4 +1,9 @@
-# $Id: Changes,v 1.5 2002/12/04 01:07:25 comdog Exp $
+# $Id: Changes,v 1.6 2003/03/03 15:56:05 petdance Exp $
+
+0.95 - Mon Mar  3 09:35:00 CST 2002
+	+ Rewrote to use Pod::Simple instead of Pod::Checker
+	+ Deprecated the pod_ok function.
+	+ Added pod_file_ok() to replace pod_ok().
 
 0.90 - Tue Dec  3 18:59:39 CST 2002
 	+ things seem to be going well, so this is not in beta :)
