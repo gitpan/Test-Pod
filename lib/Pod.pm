@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.2 2002/08/19 05:43:13 comdog Exp $
+#$Id: Pod.pm,v 1.3 2002/08/29 22:09:40 comdog Exp $
 package Test::Pod;
 use strict;
 
@@ -25,10 +25,11 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw($VERSION @EXPORT);
-$VERSION = '0.46';
+$VERSION = '0.62';
 
 use Carp qw(carp);
 use Exporter;
+use IO::Null;
 use Pod::Checker qw(podchecker);
 use Test::Builder;
 
@@ -143,13 +144,13 @@ sub _check_pod
 	# i pass it a null filehandle because i need to fool
 	# Pod::Checker into thinking it is sending the errors
 	# somewhere so it will count them for me.
-	open NULL, ">> /dev/null";	
+	tie( *NULL, 'IO::Null' );	
 	$checker->parse_from_file( $file, \*NULL );
 		
 	$hash{ result } = do {
 		$hash{errors}   = $checker->num_errors;
-		$hash{warnings} = $checker->num_warnings
-			if $checker->can('num_warnings');
+		$hash{warnings} = $checker->can('num_warnings') ?
+			$checker->num_warnings : 0;
 		
 		   if( $hash{errors} == -1  ) { NO_POD   }
 		elsif( $hash{errors}   > 0  ) { ERRORS   }
