@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.1 2004/03/02 02:38:41 andy Exp $
+#$Id: Pod.pm,v 1.2 2004/03/13 16:39:38 andy Exp $
 
 package Test::Pod;
 
@@ -10,14 +10,14 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.10
+Version 1.12
 
-    $Header: /home/cvs/test-pod/Pod.pm,v 1.1 2004/03/02 02:38:41 andy Exp $
+    $Header: /home/cvs/test-pod/Pod.pm,v 1.2 2004/03/13 16:39:38 andy Exp $
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.10';
+$VERSION = '1.12';
 
 =head1 SYNOPSIS
 
@@ -184,8 +184,9 @@ sub all_pod_files_ok {
 
 =head2 all_pod_files( [@dirs] )
 
-Returns a list of all F<*.pl>, F<*.pm> or F<*.pod> files in I<$dir> and
-in directories below. If no directories are passed, it defaults to "blib".
+Returns a list of all F<*.PL>, F<*.pl>, F<*.pm> or F<*.pod> files in
+I<$dir> and in directories below. If no directories are passed, it
+defaults to "blib".
 
 The order of the files returned is machine-dependent.  If you want them
 sorted, you'll have to sort them yourself.
@@ -200,7 +201,7 @@ sub all_pod_files {
             sub {
                 return unless -f $_;
                 my $hit = 0;
-                $hit = 1 if /\.p(l|m|od)$/;
+                $hit = 1 if /\.p(l|m|od)$/ || /\.PL$/;
                 unless ( $hit ) {
                     local *FH;
                     open FH, $_ or die "Can't check $_";

@@ -1,4 +1,8 @@
-# $Id: Changes,v 1.23 2004/03/10 05:28:39 andy Exp $
+# $Id: Changes,v 1.24 2004/03/13 16:39:38 andy Exp $
+
+1.12 - Sat Mar 13 10:34:06 CST 2004
+    [ENHANCEMENTS]
+    * all_pod_files() now picks up *.PL files.
 
 1.10 - Tue Mar  9 23:27:16 CST 2004
     [ENHANCEMENTS]
