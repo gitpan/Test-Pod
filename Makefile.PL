@@ -1,4 +1,4 @@
-# $Id: Makefile.PL,v 1.13 2003/11/10 05:41:57 petdance Exp $
+# $Id: Makefile.PL,v 1.14 2003/12/28 06:05:54 petdance Exp $
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
@@ -6,9 +6,10 @@ WriteMakefile (
     'VERSION_FROM'   => 'lib/Pod.pm',
     'PREREQ_PM'      => {
 	'Pod::Simple'           => '2.04',
-	'Test::More'            => '0',
-	'Test::Builder::Tester' => '0',
-	'File::Find'		=> '0',
+        'Test::More'            => 0,
+        'Test::Builder::Tester' => 0,
+        'File::Find'            => 0,
+        'File::Spec'            => 0,
     },
     'PM' => {
 	'lib/Pod.pm' => '$(INST_LIBDIR)/Pod.pm',

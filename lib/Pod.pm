@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.15 2003/11/10 15:09:00 petdance Exp $
+#$Id: Pod.pm,v 1.19 2004/01/10 04:41:44 petdance Exp $
 
 package Test::Pod;
 
@@ -8,36 +8,67 @@ use strict;
 
 Test::Pod - check for POD errors in files
 
+=head1 VERSION
+
+Version 1.04
+
+    $Header: /cvsroot/brian-d-foy/Test/Pod/lib/Pod.pm,v 1.19 2004/01/10 04:41:44 petdance Exp $
+
+=cut
+
+use vars qw( $VERSION );
+$VERSION = '1.04';
+
 =head1 SYNOPSIS
 
-Test::Pod lets you check the validity of a POD file, and report its
-results in standard Test::Simple fashion.
+C<Test::Pod> lets you check the validity of a POD file, and report
+its results in standard C<Test::Simple> fashion.
 
     use Test::Pod;
     plan tests => $num_tests;
     pod_file_ok( $file, "Valid POD file" );
 
 Module authors can include the following in a F<t/pod.t> file and
-have Test::Pod automatically find and check all POD files in a module
-distribution:
+have C<Test::Pod> automatically find and check all POD files in a
+module distribution:
 
     use Test::More;
     eval "use Test::Pod 1.00";
     plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
     all_pod_files_ok();
 
+You can also specify a list of files to check, using the
+C<all_pod_files()> function supplied:
+
+    use strict;
+    use Test::More;
+    eval "use Test::Pod 1.00";
+    plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
+    my @poddirs = qw( blib script );
+    all_pod_files_ok( all_pod_files( @poddirs ) );
+
+Or even (if you're running under L<Apache::Test>):
+
+    use strict;
+    use Test::More;
+    eval "use Test::Pod 1.00";
+    plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
+
+    my @poddirs = qw( blib script );
+    use File::Spec::Functions qw( catdir updir );
+    all_pod_files_ok(
+	all_pod_files( map { catdir updir, $_ } @poddirs )
+    );
+
+
 =head1 DESCRIPTION
 
-THIS IS BETA SOFTWARE.
-
-Check POD files for errors or warnings in a test file, using Pod::Simple
-to do the heavy lifting.
+Check POD files for errors or warnings in a test file, using
+C<Pod::Simple> to do the heavy lifting.
 
 =cut
 
 use 5.004;
-use vars qw( $VERSION );
-$VERSION = '1.02';
 
 use Exporter;
 use vars qw( @EXPORT @EXPORT_OK );
@@ -99,18 +130,22 @@ sub pod_file_ok {
 	$Test->diag( "$name does not exist" );
 	return;
     }
-    
+
     my $checker = Pod::Simple->new;
-    
+
     $checker->output_string( \my $trash ); # Ignore any output
     $checker->parse_file( $file );
-    unless ( $Test->ok( !$checker->any_errata_seen, $name ) ) {
+
+    my $ok = !$checker->any_errata_seen;
+    unless ( $Test->ok( $ok, $name ) ) {
 	my $lines = $checker->{errata};
 	for my $line ( sort { $a<=>$b } keys %$lines ) {
 	    my $errors = $lines->{$line};
 	    $Test->diag( "$file ($line): $_" ) for @$errors;
 	}
     }
+
+    return $ok;
 } # pod_file_ok
 
 =head2 all_pod_files_ok( [@files] )
@@ -130,50 +165,50 @@ If you're testing a module, just make a F<t/pod.t>:
     plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
     all_pod_files_ok();
 
+Returns true if all pod files are ok, or false if any fail.
+
 =cut
 
 sub all_pod_files_ok {
-    my @files = @_ ? @_ : all_pod_files( "blib" );
+    my @files = @_ ? @_ : all_pod_files();
 
     $Test->plan( tests => scalar @files );
 
+    my $ok = 1;
     foreach my $file ( @files ) {
-	pod_file_ok( $file, $file );
+	pod_file_ok( $file, $file ) or undef $ok;
     }
+    return $ok;
 }
+
+=head2 all_pod_files( [@dirs] )
+
+Returns a list of all F<*.pl>, F<*.pm> or F<*.pod> files in I<$dir> and
+in directories below. If no directories are passed, it defaults to "blib".
+
+=cut
 
 sub all_pod_files {
     my @files;
 
-    find( sub {
-	return unless -f $_;
-
-	my $hit = 0;
-	$hit = 1 if /\.p(l|m|od)$/;
-	if ( !$hit ) {
-	    local *FH;
-	    open FH, $_ or die "Can't check $_";
-	    my $first = <FH>;
-	    close FH;
-
-	    $hit = 1 if $first && ($first =~ /^#!.*perl/);
-	}
-
-	push( @files, $File::Find::name ) if $hit;
-    }, "blib" );
+    for my $dir (@_ ? @_ : ('blib')) {
+        find(
+            sub {
+                return unless -f $_;
+                my $hit = 0;
+                $hit = 1 if /\.p(l|m|od)$/;
+                unless ( $hit ) {
+                    local *FH;
+                    open FH, $_ or die "Can't check $_";
+                    my $first = <FH>;
+                    close FH;
+                    $hit = 1 if $first && ($first =~ /^#!.*perl/);
+                }
+                push( @files, $File::Find::name ) if $hit;
+            }, $dir );
+    }
 
     return @files;
-}
-
-sub valid_file {
-    my $file = shift;
-
-    return 0 unless -f $_;
-
-    warn "Checking $_ as $file\n";
-
-
-    return 0;
 }
 
 =head2 pod_ok( FILENAME [, EXPECTED [, NAME ]]  )
@@ -208,8 +243,9 @@ sub pod_ok {
     my $filename = shift;
     my $expected = shift; # No longer used
 
-    pod_file_ok( $filename, @_ );
+    my $ok = pod_file_ok( $filename, @_ );
     $Test->diag( "NOTE: pod_ok() is deprecated" );
+    return $ok;
 } # pod_ok
 
 
@@ -232,7 +268,7 @@ Note that you no longer can test for "no pod".
 
 =head1 AUTHOR
 
-Currently maintained by Andy Lester, C<< <test-pod@petdance.com> >>.
+Currently maintained by Andy Lester, C<< <andy@petdance.com> >>.
 
 Originally by brian d foy, C<< <bdfoy@cpan.org> >>.
 

@@ -1,4 +1,20 @@
-# $Id: Changes,v 1.12 2003/11/10 15:09:00 petdance Exp $
+# $Id: Changes,v 1.16 2004/01/10 04:41:44 petdance Exp $
+
+1.04 - Fri Jan  9 22:39:15 CST 2004
+    [ENHANCEMENTS]
+    * all_pod_files() can now take multiple start directories.
+      Thanks to David Wheeler for the patch.
+
+1.03
+    [FIXES]
+    * All the *ok() functions now return the value of the underlying ok().
+
+    [DOCUMENTATION]
+    * All functions are now documented.
+
+    [INTERNALS]
+    * Removed valid_file, which was not being used.
+
 
 1.02 - Mon Nov 10 09:07:39 CST 2003
     No new functionality.  If 1.00 installed for you, then you don't
