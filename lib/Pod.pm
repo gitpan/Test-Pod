@@ -1,4 +1,4 @@
-#$Id: Pod.pm,v 1.13 2003/11/10 06:07:02 petdance Exp $
+#$Id: Pod.pm,v 1.15 2003/11/10 15:09:00 petdance Exp $
 
 package Test::Pod;
 
@@ -10,11 +10,21 @@ Test::Pod - check for POD errors in files
 
 =head1 SYNOPSIS
 
+Test::Pod lets you check the validity of a POD file, and report its
+results in standard Test::Simple fashion.
+
     use Test::Pod;
-
     plan tests => $num_tests;
-
     pod_file_ok( $file, "Valid POD file" );
+
+Module authors can include the following in a F<t/pod.t> file and
+have Test::Pod automatically find and check all POD files in a module
+distribution:
+
+    use Test::More;
+    eval "use Test::Pod 1.00";
+    plan skip_all => "Test::Pod 1.00 required for testing POD" if $@;
+    all_pod_files_ok();
 
 =head1 DESCRIPTION
 
@@ -27,7 +37,7 @@ to do the heavy lifting.
 
 use 5.004;
 use vars qw( $VERSION );
-$VERSION = '1.00';
+$VERSION = '1.02';
 
 use Exporter;
 use vars qw( @EXPORT @EXPORT_OK );

@@ -1,7 +1,8 @@
-# $Id: all_pod_files.t,v 1.1 2003/11/10 05:49:44 petdance Exp $
+# $Id: all_pod_files.t,v 1.2 2003/11/10 15:02:08 petdance Exp $
 use strict;
 
 use Test::More tests => 2;
+use File::Spec;
 
 BEGIN {
     use_ok( "Test::Pod" );
