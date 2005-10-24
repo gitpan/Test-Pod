@@ -1,4 +1,4 @@
-# $Id: item-ordering.pod,v 1.2 2003/03/04 17:41:17 petdance Exp $
+# $Id: item-ordering.pod 53 2003-03-04 17:41:18Z petdance $
 
 =head1 COPYRIGHT
 

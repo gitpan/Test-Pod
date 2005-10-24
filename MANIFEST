@@ -19,5 +19,7 @@ t/pod/good.pod
 t/pod/no_pod.pod
 t/pod_ok.t
 t/selftest.t
+t/spaced-directives.pod
+t/spaced-directives.t
 t/unknown-directive.pod
 t/unknown-directive.t

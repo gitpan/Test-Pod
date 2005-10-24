@@ -1,4 +1,13 @@
-# $Id: Changes,v 1.31 2004/06/23 05:35:27 andy Exp $
+Change log for Test::Pod
+
+1.22 - Sun Oct 23 23:45:51 CDT 2005
+    [ENHANCEMENTS]
+    * Added check for lines with only whitespace before or after a
+      directive.  Older POD formatters can get confused by such
+      lines since they goof up paragraph mode. (RT #6467)
+
+    [FIXES]
+    * Bumped up requirements to Test::Simple 0.62.
 
 1.20 - Wed Jun 23 00:28:35 CDT 2004
     [ENHANCEMENTS]

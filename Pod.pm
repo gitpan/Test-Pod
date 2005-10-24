@@ -8,14 +8,12 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.20
-
-    $Header: /home/cvs/test-pod/Pod.pm,v 1.10 2004/06/23 05:35:27 andy Exp $
+Version 1.22
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.20';
+$VERSION = '1.22';
 
 =head1 SYNOPSIS
 
@@ -57,7 +55,6 @@ Or even (if you're running under L<Apache::Test>):
     all_pod_files_ok(
         all_pod_files( map { catdir updir, $_ } @poddirs )
     );
-
 
 =head1 DESCRIPTION
 
