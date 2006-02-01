@@ -1,8 +1,8 @@
 Changes
 MANIFEST
 Makefile.PL
-META.yml
 Pod.pm
+
 t/all_pod_files.t
 t/cut-outside-block.pod
 t/cut-outside-block.t
@@ -17,9 +17,9 @@ t/pod/good-pod-script
 t/pod/good-pod-script
 t/pod/good.pod
 t/pod/no_pod.pod
-t/pod_ok.t
 t/selftest.t
 t/spaced-directives.pod
 t/spaced-directives.t
 t/unknown-directive.pod
 t/unknown-directive.t
+META.yml                                 Module meta-data (added by MakeMaker)

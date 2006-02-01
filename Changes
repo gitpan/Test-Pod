@@ -1,5 +1,13 @@
 Change log for Test::Pod
 
+1.24 - Wed Feb  1 15:18:06 PST 2006
+    [THINGS THAT MAY BREAK YOUR CODE]
+    * The long-deprecated pod_ok() is now gone, along with all its
+      constants.
+
+    [ENHANCEMENTS]
+    * Now runs properly under VMS.  Thanks to Peter Edwards.
+
 1.22 - Sun Oct 23 23:45:51 CDT 2005
     [ENHANCEMENTS]
     * Added check for lines with only whitespace before or after a

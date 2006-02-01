@@ -8,12 +8,12 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.22
+Version 1.24
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.22';
+$VERSION = '1.24';
 
 =head1 SYNOPSIS
 
@@ -71,26 +71,14 @@ use File::Spec;
 
 my $Test = Test::Builder->new;
 
-use constant OK       =>  0;
-use constant NO_FILE  => -2;
-use constant NO_POD   => -1;
-use constant WARNINGS =>  1;
-use constant ERRORS   =>  2;
-
 sub import {
     my $self = shift;
     my $caller = caller;
-    no strict 'refs';
-    *{$caller.'::pod_ok'}       = \&pod_ok;
-    *{$caller.'::pod_file_ok'}  = \&pod_file_ok;
-    *{$caller.'::all_pod_files'}  = \&all_pod_files;
-    *{$caller.'::all_pod_files_ok'}  = \&all_pod_files_ok;
 
-    *{$caller.'::POD_OK'}       = \&OK;
-    *{$caller.'::NO_FILE'}      = \&NO_FILE;
-    *{$caller.'::NO_POD'}       = \&NO_POD;
-    *{$caller.'::POD_WARNINGS'} = \&WARNINGS;
-    *{$caller.'::POD_ERRORS'}   = \&ERRORS;
+    for my $func ( qw( pod_file_ok all_pod_files all_pod_files_ok ) ) {
+        no strict 'refs';
+        *{$caller."::".$func} = \&$func;
+    }
 
     $Test->exported_to($caller);
     $Test->plan(@_);
@@ -210,7 +198,15 @@ sub all_pod_files {
             @newfiles = File::Spec->no_upwards( @newfiles );
             @newfiles = grep { $_ ne "CVS" && $_ ne ".svn" } @newfiles;
 
-            push @queue, map "$file/$_", @newfiles;
+            foreach my $newfile (@newfiles) {
+                my $filename = File::Spec->catfile( $file, $newfile );
+                if ( -f $filename ) {
+                    push @queue, $filename;
+                }
+                else {
+                    push @queue, File::Spec->catdir( $file, $newfile );
+                }
+            }
         }
         if ( -f $file ) {
             push @pod, $file if _is_perl( $file );
@@ -241,44 +237,6 @@ sub _is_perl {
     return;
 }
 
-=head2 pod_ok( FILENAME [, EXPECTED [, NAME ]]  )
-
-Note: This function is B<deprecated>.  Use pod_file_ok() going forward.
-
-pod_ok parses the POD in filename and returns one of five
-symbolic constants starting from the top of this list:
-
-        NO_FILE       Could not find the file
-        NO_POD        File had no pod directives
-        POD_ERRORS    POD had errors
-        POD_WARNINGS  POD had warnings
-        POD_OK        No errors or warnings
-
-pod_ok will okay the test if you don't specify any expected
-result and it finds no errors or warnings, or if you specify
-what you expect and it finds that condition.  For instance, if
-you can live with warnings,
-
-        pod_ok( $file, POD_WARNINGS );
-
-When it fails, pod_ok will show any pod checking errors.
-
-The optional third argument NAME is the name of the test
-which pod_ok passes through to Test::Builder.  Otherwise,
-it chooses a default test name "POD test for FILENAME".
-
-=cut
-
-sub pod_ok {
-    my $filename = shift;
-    my $expected = shift; # No longer used
-
-    my $ok = pod_file_ok( $filename, @_ );
-    $Test->diag( "NOTE: pod_ok() is deprecated" );
-    return $ok;
-} # pod_ok
-
-
 =head1 TODO
 
 STUFF TO DO
@@ -289,13 +247,21 @@ Note that you no longer can test for "no pod".
 
 =head1 AUTHOR
 
-Currently maintained by Andy Lester, C<< <andy@petdance.com> >>.
+Currently maintained by Andy Lester, C<< <andy at petdance.com> >>.
 
-Originally by brian d foy, C<< <bdfoy@cpan.org> >>.
+Originally by brian d foy.
+
+=head1 ACKNOWLEDGEMENTS
+
+Thanks to
+David Wheeler
+and
+Peter Edwards
+for contributions and to C<brian d foy> for the original code.
 
 =head1 COPYRIGHT
 
-Copyright 2004, Andy Lester, All Rights Reserved.
+Copyright 2006, Andy Lester, All Rights Reserved.
 
 You may use, modify, and distribute this package under the
 same terms as Perl itself.
