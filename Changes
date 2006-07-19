@@ -1,5 +1,13 @@
 Change log for Test::Pod
 
+1.26 - Wed Jul 19 09:54:48 CDT 2006
+
+    No new functionality in this version.
+
+    [FIXES]
+    * Fixed a Win32 build bug.
+    * Fixed a bug in the SYNOPSIS.
+
 1.24 - Wed Feb  1 15:18:06 PST 2006
     [THINGS THAT MAY BREAK YOUR CODE]
     * The long-deprecated pod_ok() is now gone, along with all its

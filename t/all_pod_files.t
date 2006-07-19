@@ -29,4 +29,5 @@ else {
 }
 my @files = sort map { lc } all_pod_files( "blib", "t/pod" );
 @expected = sort map { lc } @expected;
+s{\\}{/}g for @files, @expected;
 is_deeply( \@files, \@expected, "Got all the distro files" );

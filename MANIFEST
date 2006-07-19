@@ -3,6 +3,7 @@ MANIFEST
 Makefile.PL
 Pod.pm
 
+t/00-load.t
 t/all_pod_files.t
 t/cut-outside-block.pod
 t/cut-outside-block.t

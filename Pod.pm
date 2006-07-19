@@ -8,20 +8,19 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.24
+Version 1.26
 
 =cut
 
 use vars qw( $VERSION );
-$VERSION = '1.24';
+$VERSION = '1.26';
 
 =head1 SYNOPSIS
 
 C<Test::Pod> lets you check the validity of a POD file, and report
 its results in standard C<Test::Simple> fashion.
 
-    use Test::Pod;
-    plan tests => $num_tests;
+    use Test::Pod tests => $num_tests;
     pod_file_ok( $file, "Valid POD file" );
 
 Module authors can include the following in a F<t/pod.t> file and
