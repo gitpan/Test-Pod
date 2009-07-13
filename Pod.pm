@@ -1,3 +1,43 @@
+package Test::Pod::_parser;
+use base 'Pod::Simple';
+use strict;
+
+sub _handle_element_start {
+    my($parser, $element_name, $attr_hash_r) = @_;
+
+    # Curiously, Pod::Simple supports L<text|scheme:...> rather well.
+
+    if( $element_name eq "L" and $attr_hash_r->{type} eq "url") {
+        $parser->{_state_of_concern}{'Lurl'} = $attr_hash_r->{to};
+    }
+
+    return $parser->SUPER::_handle_element_start(@_);
+}
+
+sub _handle_element_end {
+    my($parser, $element_name) = @_;
+
+    delete $parser->{_state_of_concern}{'Lurl'}
+        if $element_name eq "L" and exists $parser->{_state_of_concern}{'Lurl'};
+
+    return $parser->SUPER::_handle_element_end(@_);
+}
+
+sub _handle_text {
+    my($parser, $text) = @_;
+    if( my $href = $parser->{_state_of_concern}{'Lurl'} ) {
+        if( $href ne $text ) {
+            my $line = $parser->line_count() -2; # XXX: -2, WHY WHY WHY??
+
+            $parser->whine($line, "L<text|scheme:...> is invalid according to perlpod");
+        }
+    }
+
+    return $parser->SUPER::_handle_text(@_);
+}
+
+1;
+
 package Test::Pod;
 
 use strict;
@@ -8,12 +48,11 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.26
+Version 1.40
 
 =cut
 
-use vars qw( $VERSION );
-$VERSION = '1.26';
+our $VERSION = '1.40';
 
 =head1 SYNOPSIS
 
@@ -62,11 +101,23 @@ C<Pod::Simple> to do the heavy lifting.
 
 =cut
 
-use 5.004;
+use 5.008;
 
-use Pod::Simple;
 use Test::Builder;
 use File::Spec;
+
+our %ignore_dirs = (
+    '.bzr' => 'Bazaar',
+    '.git' => 'Git',
+    '.hg'  => 'Mercurial',
+    '.pc'  => 'quilt',
+    '.svn' => 'Subversion',
+    CVS    => 'CVS',
+    RCS    => 'RCS',
+    SCCS   => 'SCCS',
+    _darcs => 'darcs',
+    _sgbak => 'Vault/Fortress',
+);
 
 my $Test = Test::Builder->new;
 
@@ -81,6 +132,12 @@ sub import {
 
     $Test->exported_to($caller);
     $Test->plan(@_);
+}
+
+sub _additional_test_pod_specific_checks {
+    my ($ok, $errata, $file) = @_;
+
+    return $ok;
 }
 
 =head1 FUNCTIONS
@@ -109,12 +166,14 @@ sub pod_file_ok {
         return;
     }
 
-    my $checker = Pod::Simple->new;
+    my $checker = Test::Pod::_parser->new;
 
     $checker->output_string( \my $trash ); # Ignore any output
     $checker->parse_file( $file );
 
     my $ok = !$checker->any_errata_seen;
+       $ok = _additional_test_pod_specific_checks( $ok, ($checker->{errata}||={}), $file );
+
     $Test->ok( $ok, $name );
     if ( !$ok ) {
         my $lines = $checker->{errata};
@@ -130,13 +189,14 @@ sub pod_file_ok {
 =head2 all_pod_files_ok( [@files/@directories] )
 
 Checks all the files in C<@files> for valid POD.  It runs
-L<all_pod_files()> on each file/directory, and calls the C<plan()> function for you
-(one test for each function), so you can't have already called C<plan>.
+L<all_pod_files()> on each file/directory, and calls the C<plan()>
+function for you (one test for each function), so you can't have
+already called C<plan>.
 
-If C<@files> is empty or not passed, the function finds all POD files in
-the F<blib> directory if it exists, or the F<lib> directory if not.
-A POD file is one that ends with F<.pod>, F<.pl> and F<.pm>, or any file
-where the first line looks like a shebang line.
+If C<@files> is empty or not passed, the function finds all POD
+files in the F<blib> directory if it exists, or the F<lib> directory
+if not.  A POD file is one that ends with F<.pod>, F<.pl> and F<.pm>,
+or any file where the first line looks like a shebang line.
 
 If you're testing a module, just make a F<t/pod.t>:
 
@@ -163,9 +223,11 @@ sub all_pod_files_ok {
 
 =head2 all_pod_files( [@dirs] )
 
-Returns a list of all the Perl files in I<$dir> and in directories below.
-If no directories are passed, it defaults to F<blib> if F<blib> exists,
-or else F<lib> if not.  Skips any files in CVS or .svn directories.
+Returns a list of all the Perl files in I<$dir> and in directories
+below.  If no directories are passed, it defaults to F<blib> if
+F<blib> exists, or else F<lib> if not.  Skips any files in CVS,
+.svn, .git and similar directories.  See C<%Test::Pod::ignore_dirs>
+for a list of them.
 
 A Perl file is:
 
@@ -195,7 +257,7 @@ sub all_pod_files {
             closedir DH;
 
             @newfiles = File::Spec->no_upwards( @newfiles );
-            @newfiles = grep { $_ ne "CVS" && $_ ne ".svn" } @newfiles;
+            @newfiles = grep { not exists $ignore_dirs{ $_ } } @newfiles;
 
             foreach my $newfile (@newfiles) {
                 my $filename = File::Spec->catfile( $file, $newfile );
@@ -223,13 +285,12 @@ sub _is_perl {
     my $file = shift;
 
     return 1 if $file =~ /\.PL$/;
-    return 1 if $file =~ /\.p(l|m|od)$/;
+    return 1 if $file =~ /\.p(?:l|m|od)$/;
     return 1 if $file =~ /\.t$/;
 
-    local *FH;
-    open FH, $file or return;
-    my $first = <FH>;
-    close FH;
+    open my $fh, '<', $file or return;
+    my $first = <$fh>;
+    close $fh;
 
     return 1 if defined $first && ($first =~ /^#!.*perl/);
 
@@ -253,17 +314,18 @@ Originally by brian d foy.
 =head1 ACKNOWLEDGEMENTS
 
 Thanks to
-David Wheeler
+David Wheeler,
+Paul Miller
 and
 Peter Edwards
 for contributions and to C<brian d foy> for the original code.
 
 =head1 COPYRIGHT
 
-Copyright 2006, Andy Lester, All Rights Reserved.
+Copyright 2006-2009, Andy Lester, All Rights Reserved.
 
-You may use, modify, and distribute this package under the
-same terms as Perl itself.
+You may use, modify, and distribute this package under the terms
+as the Artistic License v2.0 or GNU Public License v2.0.
 
 =cut
 
