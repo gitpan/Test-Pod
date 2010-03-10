@@ -8,11 +8,11 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.41
+Version 1.42
 
 =cut
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 =head1 SYNOPSIS
 
@@ -135,6 +135,7 @@ sub pod_file_ok {
     my $ok = !$checker->any_errata_seen;
        $ok = _additional_test_pod_specific_checks( $ok, ($checker->{errata}||={}), $file );
 
+    $name .= ' (no pod)' if !$checker->content_seen;
     $Test->ok( $ok, $name );
     if ( !$ok ) {
         my $lines = $checker->{errata};
@@ -147,17 +148,17 @@ sub pod_file_ok {
     return $ok;
 } # pod_file_ok
 
-=head2 all_pod_files_ok( [@files/@directories] )
+=head2 all_pod_files_ok( [@entries] )
 
-Checks all the files in C<@files> for valid POD.  It runs
-L<all_pod_files()> on each file/directory, and calls the C<plan()>
-function for you (one test for each function), so you can't have
-already called C<plan>.
+Checks all the files under C<@entries> for valid POD. It runs
+L<all_pod_files()> on directories and assumes everything else to be a file to
+be tested. It calls the C<plan()> function for you (one test for each file),
+so you can't have already called C<plan>.
 
-If C<@files> is empty or not passed, the function finds all POD
-files in the F<blib> directory if it exists, or the F<lib> directory
-if not.  A POD file is one that ends with F<.pod>, F<.pl> and F<.pm>,
-or any file where the first line looks like a shebang line.
+If C<@entries> is empty or not passed, the function finds all POD files in
+files in the F<blib> directory if it exists, or the F<lib> directory if not. A
+POD file is one that ends with F<.pod>, F<.pl> and F<.pm>, or any file where
+the first line looks like a shebang line.
 
 If you're testing a module, just make a F<t/pod.t>:
 
@@ -171,32 +172,34 @@ Returns true if all pod files are ok, or false if any fail.
 =cut
 
 sub all_pod_files_ok {
-    my @files = @_ ? @_ : all_pod_files();
+    my @args = @_ ? @_ : _starting_points();
+    my @files = map { -d $_ ? all_pod_files($_) : $_ } @args;
 
     $Test->plan( tests => scalar @files );
 
     my $ok = 1;
     foreach my $file ( @files ) {
-        pod_file_ok( $file, $file ) or undef $ok;
+        pod_file_ok( $file ) or undef $ok;
     }
     return $ok;
 }
 
 =head2 all_pod_files( [@dirs] )
 
-Returns a list of all the Perl files in I<$dir> and in directories
-below.  If no directories are passed, it defaults to F<blib> if
-F<blib> exists, or else F<lib> if not.  Skips any files in CVS,
-.svn, .git and similar directories.  See C<%Test::Pod::ignore_dirs>
-for a list of them.
+Returns a list of all the Perl files in I<@dirs> and in directories below. If
+no directories are passed, it defaults to F<blib> if F<blib> exists, or else
+F<lib> if not. Skips any files in CVS, .svn, .git and similar directories. See
+C<%Test::Pod::ignore_dirs> for a list of them.
 
 A Perl file is:
 
 =over 4
 
-=item * Any file that ends in F<.PL>, F<.pl>, F<.pm>, F<.pod> or F<.t>.
+=item * Any file that ends in F<.PL>, F<.pl>, F<.PL>, F<.pm>, F<.pod>, or F<.t>.
 
 =item * Any file that has a first line with a shebang and "perl" on it.
+
+=item * Any file that ends in F<.bat> and has a first line with "--*-Perl-*--" on it.
 
 =back
 
@@ -253,7 +256,7 @@ sub _is_perl {
     my $first = <$fh>;
     close $fh;
 
-    return 1 if defined $first && ($first =~ /^#!.*perl/);
+    return 1 if defined $first && ($first =~ /(?:^#!.*perl)|--\*-Perl-\*--/);
 
     return;
 }
@@ -284,12 +287,12 @@ and
 Peter Edwards
 for contributions and to C<brian d foy> for the original code.
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND LICENSE
 
 Copyright 2006-2010, Andy Lester. Some Rights Reserved.
 
-You may use, modify, and distribute this package under the terms
-as the Artistic License v2.0 or GNU Public License v2.0.
+This module is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
 
 =cut
 
