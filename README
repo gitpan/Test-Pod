@@ -1,4 +1,4 @@
-Test/Pod version 1.43
+Test/Pod version 1.44
 =====================
 
 This library's module, Test::Pod, provides an interface for validating POD in
@@ -18,8 +18,8 @@ Dependencies
 
 Test::Pod requires the following modules:
 
-* Pod::Simple 3.07
-* Test::More 0.70
+* Pod::Simple 3.05
+* Test::More 0.62
 * Test::Builder::Tester 1.02
 * File::Spec
 
