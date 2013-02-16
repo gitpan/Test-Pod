@@ -4,7 +4,7 @@
       "Currently maintained by David E. Wheeler, C<< <david@justatheory.com> >>."
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.3706, CPAN::Meta::Converter version 2.110550",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "File::Spec" : 0,
+            "File::Spec" : "0",
             "Pod::Simple" : "3.05",
             "Test::More" : "0.62"
          }
@@ -28,7 +28,7 @@
       },
       "runtime" : {
          "requires" : {
-            "File::Spec" : 0,
+            "File::Find" : "0",
             "Pod::Simple" : "3.05",
             "Test::Builder::Tester" : "1.02",
             "Test::More" : "0.62"
@@ -38,7 +38,7 @@
    "provides" : {
       "Test::Pod" : {
          "file" : "lib/Test/Pod.pm",
-         "version" : "1.45"
+         "version" : "1.46"
       }
    },
    "release_status" : "stable",
@@ -54,5 +54,5 @@
          "url" : "http://github.com/theory/test-pod/tree/"
       }
    },
-   "version" : "1.45"
+   "version" : "1.46"
 }

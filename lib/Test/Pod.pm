@@ -8,11 +8,11 @@ Test::Pod - check for POD errors in files
 
 =head1 VERSION
 
-Version 1.45
+Version 1.46
 
 =cut
 
-our $VERSION = '1.45';
+our $VERSION = '1.46';
 
 =head1 SYNOPSIS
 
@@ -64,7 +64,6 @@ C<Pod::Simple> to do the heavy lifting.
 use 5.008;
 
 use Test::Builder;
-use File::Spec;
 use Pod::Simple;
 
 our %ignore_dirs = (
@@ -175,6 +174,11 @@ sub all_pod_files_ok {
     my @args = @_ ? @_ : _starting_points();
     my @files = map { -d $_ ? all_pod_files($_) : $_ } @args;
 
+    unless (@files) {
+        $Test->skip_all( "No files found in (@args)\n" );
+        return 1;
+    }
+
     $Test->plan( tests => scalar @files );
 
     my $ok = 1;
@@ -188,8 +192,8 @@ sub all_pod_files_ok {
 
 Returns a list of all the Perl files in I<@dirs> and in directories below. If
 no directories are passed, it defaults to F<blib> if F<blib> exists, or else
-F<lib> if not. Skips any files in CVS, .svn, .git and similar directories. See
-C<%Test::Pod::ignore_dirs> for a list of them.
+F<lib> if not. Skips any files in F<CVS>, F<.svn>, F<.git> and similar
+directories. See C<%Test::Pod::ignore_dirs> for a list of them.
 
 A Perl file is:
 
@@ -209,34 +213,12 @@ sorted, you'll have to sort them yourself.
 =cut
 
 sub all_pod_files {
-    my @queue = @_ ? @_ : _starting_points();
-    my @pod = ();
-
-    while ( @queue ) {
-        my $file = shift @queue;
-        if ( -d $file ) {
-            local *DH;
-            opendir DH, $file or next;
-            my @newfiles = readdir DH;
-            closedir DH;
-
-            @newfiles = File::Spec->no_upwards( @newfiles );
-            @newfiles = grep { not exists $ignore_dirs{ $_ } } @newfiles;
-
-            foreach my $newfile (@newfiles) {
-                my $filename = File::Spec->catfile( $file, $newfile );
-                if ( -f $filename ) {
-                    push @queue, $filename;
-                }
-                else {
-                    push @queue, File::Spec->catdir( $file, $newfile );
-                }
-            }
-        }
-        if ( -f $file ) {
-            push @pod, $file if _is_perl( $file );
-        }
-    } # while
+    my @pod;
+    require File::Find;
+    File::Find::find({
+        wanted   => sub { -f $_ && _is_perl ($_) and push @pod, $File::Find::name },
+        no_chdir => 1,
+    }, @_ ? @_ : _starting_points());
     return @pod;
 }
 
