@@ -38,7 +38,7 @@
    "provides" : {
       "Test::Pod" : {
          "file" : "lib/Test/Pod.pm",
-         "version" : "1.47"
+         "version" : "1.48"
       }
    },
    "release_status" : "stable",
@@ -54,5 +54,5 @@
          "url" : "http://github.com/theory/test-pod/tree/"
       }
    },
-   "version" : "1.47"
+   "version" : "1.48"
 }
